@@ -1,3 +1,5 @@
+ASM Machina is a ROMhack of Pokemon Red and Blue, which can be found at http://www.romhacking.net/hacks/6124/. This repo exists for preservation purposes and whatnot. Below is the original dissasembly's Readme, although it might be a bit out of date (I fear keeping up with their commits might break something).
+
 # Pokémon Red and Blue [![Build Status][ci-badge]][ci]
 
 This is a disassembly of Pokémon Red and Blue.
