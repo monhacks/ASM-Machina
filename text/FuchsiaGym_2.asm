@@ -27,7 +27,7 @@ _KogaSoulBadgeInfoText::
 _ReceivedTM06Text::
 	text "<PLAYER> received"
 	line "@"
-	text_ram wStringBuffer
+	text_ram wcf4b
 	text "!@"
 	text_end
 
@@ -172,7 +172,7 @@ _FuchsiaGymAfterBattleText6::
 
 _FuchsiaGymGuidePreBattleText::
 	text "Yo! Champ in"
-	line "making!"
+	line "the making!"
 
 	para "FUCHSIA GYM is"
 	line "riddled with"

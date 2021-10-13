@@ -11,7 +11,7 @@ _MtMoon3Text_49f64::
 _MtMoon3Text_49f6f::
 	text "<PLAYER> got the"
 	line "@"
-	text_ram wStringBuffer
+	text_ram wcf4b
 	text "!@"
 	text_end
 

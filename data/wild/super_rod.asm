@@ -41,61 +41,61 @@ SuperRodData:
 
 .Group1:
 	db 2
-	db 15, TENTACOOL
-	db 15, POLIWAG
+	db 25, TENTACOOL
+	db 25, POLIWAG
 
 .Group2:
 	db 2
-	db 15, GOLDEEN
-	db 15, POLIWAG
+	db 25, GOLDEEN
+	db 25, POLIWAG
 
 .Group3:
 	db 3
-	db 15, PSYDUCK
-	db 15, GOLDEEN
-	db 15, KRABBY
+	db 25, SQUIRTLE
+	db 25, GOLDEEN
+	db 25, KRABBY
 
 .Group4:
 	db 2
-	db 15, KRABBY
-	db 15, SHELLDER
+	db 25, KRABBY
+	db 25, SHELLDER
 
 .Group5:
 	db 2
-	db 23, POLIWHIRL
-	db 15, SLOWPOKE
+	db 33, POLIWHIRL
+	db 25, SLOWPOKE
 
 .Group6:
 	db 4
-	db 15, DRATINI
-	db 15, KRABBY
-	db 15, PSYDUCK
-	db 15, SLOWPOKE
+	db 40, DRATINI
+	db 40, KRABBY
+	db 40, SQUIRTLE
+	db 40, SLOWPOKE
 
 .Group7:
 	db 4
-	db 5, TENTACOOL
-	db 15, KRABBY
-	db 15, GOLDEEN
+	db 25, TENTACOOL
+	db 25, KRABBY
+	db 25, GOLDEEN
 	db 15, MAGIKARP
 
 .Group8:
 	db 4
-	db 15, STARYU
-	db 15, HORSEA
-	db 15, SHELLDER
-	db 15, GOLDEEN
+	db 45, STARYU
+	db 45, HORSEA
+	db 45, SHELLDER
+	db 45, GOLDEEN
 
 .Group9:
 	db 4
-	db 23, SLOWBRO
-	db 23, SEAKING
-	db 23, KINGLER
-	db 23, SEADRA
+	db 63, SLOWBRO
+	db 63, SEAKING
+	db 63, KINGLER
+	db 63, SEADRA
 
 .Group10:
 	db 4
-	db 23, SEAKING
-	db 15, KRABBY
-	db 15, GOLDEEN
+	db 33, SEAKING
+	db 25, KRABBY
+	db 25, GOLDEEN
 	db 15, MAGIKARP

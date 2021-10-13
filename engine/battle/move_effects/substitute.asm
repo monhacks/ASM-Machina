@@ -1,6 +1,14 @@
 SubstituteEffect_:
 	ld c, 50
 	call DelayFrames
+
+	call MoveHitTest
+	ld a, [wMoveMissed]
+	and a
+	jr z, .beginEffect
+	ld hl, ButItFailedText
+	jp PrintText
+.beginEffect
 	ld hl, wBattleMonMaxHP
 	ld de, wPlayerSubstituteHP
 	ld bc, wPlayerBattleStatus2
@@ -38,6 +46,7 @@ SubstituteEffect_:
 	pop bc
 	jr c, .notEnoughHP ; underflow means user would be left with negative health
                            ; bug: since it only branches on carry, it will possibly leave user with 0 HP
+	jr z, .notEnoughHP					
 .userHasZeroOrMoreHP
 	ldi [hl], a ; save resulting HP after subtraction into current HP
 	ld [hl], d

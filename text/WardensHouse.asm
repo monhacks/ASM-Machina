@@ -46,7 +46,7 @@ _WardenThankYouText::
 _ReceivedHM04Text::
 	text "<PLAYER> received"
 	line "@"
-	text_ram wStringBuffer
+	text_ram wcf4b
 	text "!@"
 	text_end
 

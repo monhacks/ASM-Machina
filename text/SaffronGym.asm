@@ -76,7 +76,7 @@ _TM46NoRoomText::
 
 _SaffronGymGuidePreBattleText::
 	text "Yo! Champ in"
-	line "making!"
+	line "the making!"
 
 	para "SABRINA's #MON"
 	line "use psychic power"

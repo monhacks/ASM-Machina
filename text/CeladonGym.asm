@@ -64,7 +64,7 @@ _ErikaRainbowBadgeInfoText::
 _ReceivedTM21Text::
 	text "<PLAYER> received"
 	line "@"
-	text_ram wStringBuffer
+	text_ram wcf4b
 	text "!@"
 	text_end
 
@@ -119,7 +119,7 @@ _CeladonGymAfterBattleText3::
 	cont "the water-type!"
 
 	para "They also have an"
-	line "edge on rock and"
+	line "edge against any"
 	cont "ground #MON!"
 	done
 
@@ -152,9 +152,9 @@ _CeladonGymEndBattleText5::
 	prompt
 
 _CeladonGymAfterBattleText5::
-	text "We only use grass-"
-	line "type #MON at"
-	cont "our GYM!"
+	text "We mostly use"
+	line "grass #MON"
+	cont "at our GYM!"
 
 	para "We also use them"
 	line "for making flower"

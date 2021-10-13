@@ -204,9 +204,9 @@ UpdateHPBar_CalcHPDifference:
 UpdateHPBar_PrintHPNumber:
 	push af
 	push de
-	ld a, [wHPBarType]
-	and a
-	jr z, .done ; don't print number in enemy HUD
+	;ld a, [wHPBarType]
+	;and a
+	;jr z, .done ; don't print number in enemy HUD
 ; convert from little-endian to big-endian for PrintNumber
 	ld a, [wHPBarOldHP]
 	ld [wHPBarTempHP + 1], a

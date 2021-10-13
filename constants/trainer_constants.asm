@@ -21,9 +21,9 @@ ENDM
 	trainer_const SAILOR         ; $04
 	trainer_const JR_TRAINER_M   ; $05
 	trainer_const JR_TRAINER_F   ; $06
-	trainer_const POKEMANIAC     ; $07
+	trainer_const HIKER ;POKEMANIAC ; $07
 	trainer_const SUPER_NERD     ; $08
-	trainer_const HIKER          ; $09
+	trainer_const POKEMANIAC ;HIKER ; $09
 	trainer_const BIKER          ; $0A
 	trainer_const BURGLAR        ; $0B
 	trainer_const ENGINEER       ; $0C

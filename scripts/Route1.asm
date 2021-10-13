@@ -12,6 +12,12 @@ Route1Text1:
 	jr nz, .got_item
 	ld hl, Route1ViridianMartSampleText
 	call PrintText
+	lb bc, EXP_ALL, 1
+	call GiveItem
+	jr nc, .bag_full
+	lb bc, HEAL_PARTY, 1
+	call GiveItem
+	jr nc, .bag_full
 	lb bc, POTION, 1
 	call GiveItem
 	jr nc, .bag_full

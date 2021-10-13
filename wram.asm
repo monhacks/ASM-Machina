@@ -143,7 +143,7 @@ ENDR
 ; The high byte of a pointer to anywhere within wSpriteStateData1 can be incremented
 ; to reach within wSpriteStateData2, and vice-versa for decrementing.
 ASSERT HIGH(wSpriteStateData1) + 1 == HIGH(wSpriteStateData2)
-ASSERT LOW(wSpriteStateData1) == 0 && LOW(wSpriteStateData2) == 0
+ASSERT LOW(wSpriteStateData1) == 0
 
 wSpriteDataEnd::
 
@@ -1055,7 +1055,7 @@ wPartyMenuBlkPacket:: ds $30
 NEXTU
 	ds 29
 ; storage buffer for various strings
-wStringBuffer:: ds 20
+wcf4b:: ds 20
 
 NEXTU
 	ds 29

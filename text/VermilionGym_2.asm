@@ -26,7 +26,7 @@ _LTSurgeThunderBadgeInfoText::
 _ReceivedTM24Text::
 	text "<PLAYER> received "
 	line "@"
-	text_ram wStringBuffer
+	text_ram wcf4b
 	text "!@"
 	text_end
 
@@ -115,7 +115,7 @@ _VermilionGymAfterBattleText3::
 
 _VermilionGymGuidePreBattleText::
 	text "Yo! Champ in"
-	line "making!"
+	line "the making!"
 
 	para "LT.SURGE has a"
 	line "nickname. People"

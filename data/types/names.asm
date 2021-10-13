@@ -1,7 +1,7 @@
 TypeNames:
 	table_width 2, TypeNames
 
-	dw .Normal
+	dw .Sound
 	dw .Fighting
 	dw .Flying
 	dw .Poison
@@ -25,7 +25,7 @@ ENDR
 
 	assert_table_length NUM_TYPES
 
-.Normal:   db "NORMAL@"
+.Sound:    db "SOUND@"
 .Fighting: db "FIGHTING@"
 .Flying:   db "FLYING@"
 .Poison:   db "POISON@"
@@ -41,3 +41,4 @@ ENDR
 .Bug:      db "BUG@"
 .Ghost:    db "GHOST@"
 .Dragon:   db "DRAGON@"
+.Normal    db "NORMAL@"

@@ -87,7 +87,7 @@ _SentToBoxText::
 	text " was"
 	cont "sent to #MON"
 	cont "BOX @"
-	text_ram wStringBuffer
+	text_ram wcf4b
 	text " on PC!"
 	done
 

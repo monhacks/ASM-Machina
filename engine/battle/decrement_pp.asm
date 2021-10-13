@@ -5,18 +5,32 @@ DecrementPP:
 	ret z                ; if the pokemon is using "struggle", there's nothing to do
 	                     ; we don't decrement PP for "struggle"
 	ld hl, wPlayerBattleStatus1
+	ldh a, [hWhoseTurn]
+	and a
+	jr z, .next
+	ld hl, wEnemyBattleStatus1
+.next
 	ld a, [hli]          ; load the wPlayerBattleStatus1 pokemon status flags and increment hl to load the
 	                     ; wPlayerBattleStatus2 status flags later
 	and (1 << STORING_ENERGY) | (1 << THRASHING_ABOUT) | (1 << ATTACKING_MULTIPLE_TIMES)
 	ret nz               ; if any of these statuses are true, don't decrement PP
 	bit USING_RAGE, [hl]
 	ret nz               ; don't decrement PP either if Pokemon is using Rage
-	ld hl, wBattleMonPP  ; PP of first move (in battle)
 
+	ld hl, wBattleMonPP  ; PP of first move (in battle)
+	ldh a, [hWhoseTurn]
+	and a
+	jr z, .actuallyDecrement
+	ld hl, wEnemyMonPP
+.actuallyDecrement
 ; decrement PP in the battle struct
 	call .DecrementPP
 
+	ldh a, [hWhoseTurn]
+	and a
+	jr nz, .enemyPartyDecrement
 ; decrement PP in the party struct
+.playerPartyDecrement
 	ld a, [wPlayerBattleStatus3]
 	bit TRANSFORMED, a
 	ret nz               ; Return if transformed. Pokemon Red stores the "current pokemon's" PP
@@ -33,9 +47,24 @@ DecrementPP:
 	ld a, [wPlayerMonNumber] ; which mon in party is active
 	ld bc, wPartyMon2 - wPartyMon1
 	call AddNTimes       ; calculate address of the mon to modify
+	jr .DecrementPP
+.enemyPartyDecrement
+	ld a, [wEnemyBattleStatus3]
+	bit TRANSFORMED, a
+	ret nz               ; Return if transformed
+	ld hl, wEnemyMon1PP  ; PP of first move (in party)
+	ld a, [wEnemyMonPartyPos] ; which mon in party is active
+	ld bc, wEnemyMon2 - wEnemyMon1
+	call AddNTimes       ; calculate address of the mon to modify
 .DecrementPP:
 	ld a, [wPlayerMoveListIndex] ; which move (0, 1, 2, 3) did we use?
 	ld c, a
+	ldh a, [hWhoseTurn]
+	and a
+	jr z, .next2
+    ld a, [wEnemyMoveListIndex]
+	ld c, a
+.next2
 	ld b, 0
 	add hl, bc           ; calculate the address in memory of the PP we need to decrement
 	                     ; based on the move chosen.

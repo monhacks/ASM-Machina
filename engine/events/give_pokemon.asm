@@ -18,7 +18,7 @@ _GivePokemon::
 	callfar LoadEnemyMonData
 	call SetPokedexOwnedFlag
 	callfar SendNewMonToBox
-	ld hl, wStringBuffer
+	ld hl, wcf4b
 	ld a, [wCurrentBoxNum]
 	and $7f
 	cp 9

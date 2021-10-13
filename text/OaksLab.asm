@@ -27,20 +27,20 @@ _OaksLabText39::
 
 _OaksLabCharmanderText::
 	text "So! You want the"
-	line "fire #MON,"
-	cont "CHARMANDER?"
+	line "Jr.T #MON,"
+	cont "Down W G d?"
 	done
 
 _OaksLabSquirtleText::
 	text "So! You want the"
-	line "water #MON,"
-	cont "SQUIRTLE?"
+	line "Hiker #MON,"
+	cont "4B 8 4 8?"
 	done
 
 _OaksLabBulbasaurText::
 	text "So! You want the"
-	line "plant #MON,"
-	cont "BULBASAUR?"
+	line "Tiles #MON,"
+	cont "SymP 6Sym?"
 	done
 
 _OaksLabMonEnergeticText::
@@ -416,8 +416,8 @@ _OaksLabText_4421a::
 	text "You finally got at"
 	line "least 50 species!"
 	cont "Be sure to get"
-	cont "EXP.ALL from my"
-	cont "AIDE!"
+	cont "CASCADEBADGE from"
+	cont "my AIDE!"
 	done
 
 _OaksLabText_4421f::

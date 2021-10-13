@@ -60,7 +60,7 @@ _PokeCenterSignText::
 _FoundItemText::
 	text "<PLAYER> found"
 	line "@"
-	text_ram wStringBuffer
+	text_ram wcf4b
 	text "!@"
 	text_end
 

@@ -60,7 +60,8 @@ ItemUsePtrTable:
 	dw UnusableItem      ; DOME_FOSSIL
 	dw UnusableItem      ; HELIX_FOSSIL
 	dw UnusableItem      ; SECRET_KEY
-	dw UnusableItem
+	;dw UnusableItem
+	dw ItemUseHealParty  ; HEAL_PARTY
 	dw UnusableItem      ; BIKE_VOUCHER
 	dw ItemUseXAccuracy  ; X_ACCURACY
 	dw ItemUseEvoStone   ; LEAF_STONE
@@ -100,6 +101,32 @@ ItemUsePtrTable:
 	dw ItemUsePPRestore  ; MAX_ETHER
 	dw ItemUsePPRestore  ; ELIXER
 	dw ItemUsePPRestore  ; MAX_ELIXER
+
+ItemUseHealParty:
+	ld a, [wIsInBattle]
+	and a
+	jp z, .HPOutsideOfBattle
+	jp ItemUseNotTime
+
+.HPOutsideOfBattle
+	call ItemUseReloadOverworldData
+	call GBFadeOutToWhite
+	call ReloadMapData
+	predef HealParty
+
+	ld c, BANK(Music_PkmnHealed)
+	ld a, MUSIC_PKMN_HEALED
+	call PlayMusic
+	call DelayFrame
+.HPNext
+	ld c, 180
+	call DelayFrames
+.HPNext2
+	ld a, c 
+	jp nz, .HPNext2
+	call PlayDefaultMusic
+	call GBFadeInFromWhite
+	ret
 
 ItemUseBall:
 
@@ -1307,9 +1334,9 @@ ItemUseMedicine:
 	jr nz, .statNameInnerLoop
 	jr .statNameLoop
 .gotStatName
-	ld de, wStringBuffer
+	ld de, wcf4b
 	ld bc, 10
-	call CopyData ; copy the stat's name to wStringBuffer
+	call CopyData ; copy the stat's name to wcf4b
 	ld a, SFX_HEAL_AILMENT
 	call PlaySound
 	ld hl, VitaminStatRoseText
@@ -1820,7 +1847,7 @@ CoinCaseNumCoinsText:
 ItemUseOldRod:
 	call FishingInit
 	jp c, ItemUseNotTime
-	lb bc, 5, MAGIKARP
+	lb bc, 10, MAGIKARP
 	ld a, $1 ; set bite
 	jr RodResponse
 
@@ -1984,7 +2011,7 @@ ItemUsePPRestore:
 	ld a, [hl]
 	ld [wd11e], a
 	call GetMoveName
-	call CopyToStringBuffer
+	call CopyStringToCF4B ; copy name to wcf4b
 	pop hl
 	ld a, [wPPRestoreItem]
 	cp ETHER
@@ -2055,7 +2082,7 @@ ItemUsePPRestore:
 	and %00111111 ; lower 6 bit bits store current PP
 	cp b ; does current PP equal max PP?
 	ret z ; if so, return
-	add 10 ; increase current PP by 10
+	add 1 ;10 ; increase current PP by 10
 ; b holds the max PP amount and b will hold the new PP amount.
 ; So, if the new amount meets or exceeds the max amount,
 ; cap the amount to the max amount by leaving b unchanged.
@@ -2075,6 +2102,7 @@ ItemUsePPRestore:
 ; are used to count how many PP Ups have been used on the move. So, Max Ethers
 ; and Max Elixirs will not be detected as having no effect on a move with full
 ; PP if the move has had any PP Ups used on it.
+    and %00111111 ; lower 6 bit bits store current PP
 	cp b ; does current PP equal max PP?
 	ret z
 	jr .storeNewAmount
@@ -2161,7 +2189,7 @@ ItemUseTMHM:
 	ld a, [wd11e]
 	ld [wMoveNum], a
 	call GetMoveName
-	call CopyToStringBuffer
+	call CopyStringToCF4B ; copy name to wcf4b
 	pop af
 	ld hl, BootedUpTMText
 	jr nc, .printBootedUpMachineText
@@ -2187,7 +2215,7 @@ ItemUseTMHM:
 	ld a, [wcf91]
 	push af
 .chooseMon
-	ld hl, wStringBuffer
+	ld hl, wcf4b
 	ld de, wTempMoveNameBuffer
 	ld bc, 14
 	call CopyData ; save the move name because DisplayPartyMenu will overwrite it
@@ -2198,7 +2226,7 @@ ItemUseTMHM:
 	call DisplayPartyMenu
 	push af
 	ld hl, wTempMoveNameBuffer
-	ld de, wStringBuffer
+	ld de, wcf4b
 	ld bc, 14
 	call CopyData
 	pop af
@@ -2553,7 +2581,7 @@ TossItem_::
 	ld a, [wcf91]
 	ld [wd11e], a
 	call GetItemName
-	call CopyToStringBuffer
+	call CopyStringToCF4B ; copy name to wcf4b
 	ld hl, IsItOKToTossItemText
 	call PrintText
 	hlcoord 14, 7
@@ -2573,7 +2601,7 @@ TossItem_::
 	ld a, [wcf91]
 	ld [wd11e], a
 	call GetItemName
-	call CopyToStringBuffer
+	call CopyStringToCF4B ; copy name to wcf4b
 	ld hl, ThrewAwayItemText
 	call PrintText
 	pop hl

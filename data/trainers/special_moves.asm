@@ -5,12 +5,12 @@
 LoneMoves:
 	; pokemon index, move to give nth pokemon
 	db 1, BIDE
-	db 1, BUBBLEBEAM
+	db 2, BUBBLEBEAM
 	db 2, THUNDERBOLT
 	db 2, MEGA_DRAIN
 	db 3, TOXIC
 	db 3, PSYWAVE
-	db 3, FIRE_BLAST
+	db 4, FIRE_BLAST
 	db 4, FISSURE
 
 ; unique moves for elite 4

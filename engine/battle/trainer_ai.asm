@@ -7,6 +7,26 @@ AIEnemyTrainerChooseMoves:
 	ld [hli], a   ; move 2
 	ld [hli], a   ; move 3
 	ld [hl], a    ; move 4
+
+	ld hl, wEnemyMonPP
+	ld d, NUM_MOVES + 1
+.loopForZeroPP
+	dec d
+	jr z, .moveDisabled
+	ld c, [hl] ; get move PP
+	inc hl
+	ld a, c
+	and a
+	jr z, .forbidZeroPPMove
+	jr .loopForZeroPP
+.forbidZeroPPMove
+	ld hl, wBuffer
+	ld c, d
+	ld b, $0
+	add hl, bc
+	ld [hl], $50
+	jr .loopForZeroPP
+.moveDisabled
 	ld a, [wEnemyDisabledMove] ; forbid disabled move (if any)
 	swap a
 	and $f
@@ -129,7 +149,6 @@ AIMoveChoiceModification1:
 	ld a, [wEnemyMovePower]
 	and a
 	jr nz, .nextMove
-	ld a, [wEnemyMoveEffect]
 	push hl
 	push de
 	push bc
@@ -140,6 +159,7 @@ AIMoveChoiceModification1:
 	pop de
 	pop hl
 	jr nc, .nextMove
+.heavilyDiscouraged
 	ld a, [hl]
 	add $5 ; heavily discourage move
 	ld [hl], a
@@ -212,6 +232,10 @@ AIMoveChoiceModification3:
 	cp $10
 	jr z, .nextMove
 	jr c, .notEffectiveMove
+	ld a, [wEnemyMovePower]
+	jr z, .nextMove
+	cp 1
+	jr z, .nextMove	
 	dec [hl] ; slightly encourage this move
 	jr .nextMove
 .notEffectiveMove ; discourages non-effective moves if better moves are available
@@ -255,8 +279,95 @@ AIMoveChoiceModification3:
 	jr z, .nextMove
 	inc [hl] ; slightly discourage this move
 	jr .nextMove
+
 AIMoveChoiceModification4:
-	ret
+	ld hl, wBuffer - 1 ; temp move selection array (-1 byte offset)
+	ld de, wEnemyMonMoves ; enemy moves
+	ld b, NUM_MOVES + 1
+	jr .nextMove
+.checkDisable
+    ld a, [wPlayerDisabledMove]
+	swap a
+	and $f
+	jr nz, .actuallyAlter
+.nextMove
+	dec b
+	ret z ; processed all 4 moves
+	inc hl
+	ld a, [de]
+	and a
+	ret z ; no more moves in move set
+	inc de
+	call ReadMove
+	ld a, [wEnemyMoveEffect]
+	cp DISABLE_EFFECT
+	jr z, .checkDisable
+	; enemy status 1
+	cp AMNESIA_EFFECT
+	jr z, .discourageMove1
+	; enemy status 2
+	cp MIST_EFFECT
+	jr z, .discourageMove2
+	cp FOCUS_ENERGY_EFFECT
+	jr z, .discourageMove3
+	cp SUBSTITUTE_EFFECT
+	jr z, .discourageMove4
+	; enemy status 3
+	cp LIGHT_SCREEN_EFFECT
+	jr z, .discourageMove5
+	cp REFLECT_EFFECT
+	jr z, .discourageMove6
+	; player status 1
+	cp EXPLODE_EFFECT
+	jr z, .discourageMove7
+	; player status 2
+	cp LEECH_SEED_EFFECT
+	jr z, .discourageMove8
+	jr .nextMove
+.discourageMove1
+    ld a, [wEnemyBattleStatus1]
+	bit CONFUSED, a
+	jr z, .nextMove
+	jr .actuallyAlter
+.discourageMove2
+    ld a, [wEnemyBattleStatus2]
+	bit PROTECTED_BY_MIST, a
+	jr z, .nextMove	
+	jr .actuallyAlter
+.discourageMove3
+    ld a, [wEnemyBattleStatus2]
+	bit GETTING_PUMPED, a
+	jr z, .nextMove	
+	jr .actuallyAlter
+.discourageMove4
+    ld a, [wEnemyBattleStatus2]
+	bit HAS_SUBSTITUTE_UP, a
+	jr z, .nextMove	
+	jr .actuallyAlter
+.discourageMove5
+    ld a, [wEnemyBattleStatus3]
+	bit HAS_LIGHT_SCREEN_UP, a
+	jr z, .nextMove	
+	jr .actuallyAlter
+.discourageMove6
+    ld a, [wEnemyBattleStatus3]
+	bit HAS_REFLECT_UP, a
+	jr z, .nextMove	
+	jr .actuallyAlter
+.discourageMove7
+    ld a, [wPlayerBattleStatus1]
+	bit INVULNERABLE, a
+	jr z, .nextMove	
+	jr .actuallyAlter
+.discourageMove8
+    ld a, [wPlayerBattleStatus2]
+	bit SEEDED, a
+	jr z, .nextMove
+.actuallyAlter
+	ld a, [hl]
+	add $6 ; even more heavily discourage move
+	ld [hl], a
+	jr .nextMove
 
 ReadMove:
 	push hl
@@ -295,6 +406,11 @@ TrainerAI:
 	ld a, [wLinkState]
 	cp LINK_STATE_BATTLING
 	ret z ; if in a link battle, we're done as well
+	ld hl, wEnemyBattleStatus3
+	bit STRUGGLING, [hl]
+	jr nz, .strugglingAI
+	bit SUPER_AFFECTED, [hl]
+	jr nz, .superAffectedAI
 	ld a, [wTrainerClass] ; what trainer class is this?
 	dec a
 	ld c, a
@@ -318,6 +434,22 @@ TrainerAI:
 	ld l, a
 	call Random
 	jp hl
+.superAffectedAI
+    res SUPER_AFFECTED, [hl]
+	call Random
+	cp 75 percent + 1
+	jr nc, TrainerAI
+	jp AISwitchIfEnoughMons
+.strugglingAI
+    res STRUGGLING, [hl]
+	call Random
+	cp 75 percent + 1
+	jr nc, .maybeElixer
+	jp AISwitchIfEnoughMons
+.maybeElixer
+    cp 89 percent + 1
+	jr nc, TrainerAI
+	jp AIUseElixer
 
 INCLUDE "data/trainers/ai_pointers.asm"
 
@@ -334,6 +466,9 @@ BlackbeltAI:
 GiovanniAI:
 	cp 25 percent + 1
 	ret nc
+	ld hl, wEnemyBattleStatus2
+	bit PROTECTED_BY_MIST, [hl]
+	ret nz
 	jp AIUseGuardSpec
 
 CooltrainerMAI:
@@ -343,6 +478,7 @@ CooltrainerMAI:
 
 CooltrainerFAI:
 	cp 25 percent + 1
+	ret nc
 	ld a, 10
 	call AICheckIfHPBelowFraction
 	jp c, AIUseHyperPotion
@@ -384,6 +520,9 @@ KogaAI:
 BlaineAI:
 	cp 25 percent + 1
 	ret nc
+	ld a, 50
+	call AICheckIfHPBelowFraction
+    ret nc
 	jp AIUseSuperPotion
 
 SabrinaAI:
@@ -411,12 +550,12 @@ Rival3AI:
 	jp AIUseFullRestore
 
 LoreleiAI:
-	cp 50 percent + 1
+	cp 30 percent + 1
 	ret nc
-	ld a, 5
-	call AICheckIfHPBelowFraction
-	ret nc
-	jp AIUseSuperPotion
+	ld a, [wEnemyBattleStatus2]
+	bit GETTING_PUMPED, a
+	ret nz
+	jp AIUseDireHit
 
 BrunoAI:
 	cp 25 percent + 1
@@ -436,7 +575,7 @@ AgathaAI:
 LanceAI:
 	cp 50 percent + 1
 	ret nc
-	ld a, 5
+	ld a, 10
 	call AICheckIfHPBelowFraction
 	ret nc
 	jp AIUseHyperPotion
@@ -571,17 +710,23 @@ AISwitchIfEnoughMons:
 	pop bc
 	dec c
 	jr nz, .loop
-
+	
+	ld a, [wPlayerBattleStatus1]
+	bit USING_TRAPPING_MOVE, a
+	and d
+	jr nz, .Trapped
 	ld a, d ; how many available monsters are there?
 	cp 2    ; don't bother if only 1
 	jp nc, SwitchEnemyMon
 	and a
 	ret
+.Trapped
+	ld d, 0
+	jr .Fainted
 
 SwitchEnemyMon:
 
 ; prepare to withdraw the active monster: copy hp, number, and status to roster
-
 	ld a, [wEnemyMonPartyPos]
 	ld hl, wEnemyMon1HP
 	ld bc, wEnemyMon2 - wEnemyMon1
@@ -631,25 +776,65 @@ AICureStatus:
 	ld hl, wEnemyBattleStatus3
 	res 0, [hl]
 	ret
+	
+AIUseElixer:
+	call AIPlayRestoringSFX
+	ld d, 4
+; loop through each move and restore PP
+.elixirLoop
+	push de
+	ld hl, wEnemyMon1Moves
+	ld bc, wEnemyMon2 - wEnemyMon1
+	ld a, [wEnemyMonPartyPos]
+	call AddNTimes
+	ld a, [hl]
+	and a ; does the current slot have a move?
+	jr z, .nextMove
+	ld hl, wEnemyMonPP
+	ld c, d
+	dec c
+	ld b, 0
+	add hl, bc
+	inc [hl]
+	ld a, [wEnemyBattleStatus3]
+	bit TRANSFORMED, a
+	jr nz, .nextMove
+	ld hl, wEnemyMon1PP
+	ld a, [wEnemyMonPartyPos]
+	ld bc, wEnemyMon2 - wEnemyMon1
+	call AddNTimes
+	ld c, d
+	dec c
+	ld b, 0
+	add hl, bc
+	inc [hl]
+.nextMove
+	pop de
+	dec d
+	jr nz, .elixirLoop
+	ld hl, wAICount
+	inc [hl] ;to keep the AI Count the same after using an elixir -OEA
+	ld a, ELIXER
+	jp AIPrintItemUse
 
 AIUseXAccuracy: ; unused
 	call AIPlayRestoringSFX
 	ld hl, wEnemyBattleStatus2
-	set 0, [hl]
+	set USING_X_ACCURACY, [hl]
 	ld a, X_ACCURACY
 	jp AIPrintItemUse
 
 AIUseGuardSpec:
 	call AIPlayRestoringSFX
 	ld hl, wEnemyBattleStatus2
-	set 1, [hl]
+	set PROTECTED_BY_MIST, [hl]
 	ld a, GUARD_SPEC
 	jp AIPrintItemUse
 
 AIUseDireHit: ; unused
 	call AIPlayRestoringSFX
 	ld hl, wEnemyBattleStatus2
-	set 2, [hl]
+	set GETTING_PUMPED, [hl]
 	ld a, DIRE_HIT
 	jp AIPrintItemUse
 

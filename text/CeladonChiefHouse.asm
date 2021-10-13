@@ -15,8 +15,10 @@ _CeladonHouseText2::
 _CeladonHouseText3::
 	text "Don't touch the"
 	line "poster at the"
-	cont "GAME CORNER!"
+	cont "GAME CORNER!..."
 
-	para "There's no secret"
-	line "switch behind it!"
+	para "But there's no"
+	line "secret switch"
+	cont "behind it or"
+	cont "anything!"
 	done

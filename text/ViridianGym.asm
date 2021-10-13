@@ -217,7 +217,7 @@ _ViridianGymAfterBattleText8::
 
 _ViridianGymGuidePreBattleText::
 	text "Yo! Champ in"
-	line "making!"
+	line "the making!"
 
 	para "Even I don't know"
 	line "VIRIDIAN LEADER's"

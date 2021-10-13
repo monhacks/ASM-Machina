@@ -13,9 +13,9 @@ TrainerPicAndMoneyPointers::
 	pic_money SailorPic,       3000
 	pic_money JrTrainerMPic,   2000
 	pic_money JrTrainerFPic,   2000
-	pic_money PokemaniacPic,   5000
+	pic_money HikerPic,        3500 ;PokemaniacPic,   5000
 	pic_money SuperNerdPic,    2500
-	pic_money HikerPic,        3500
+	pic_money PokemaniacPic,   5000 ;HikerPic,        3500
 	pic_money BikerPic,        2000
 	pic_money BurglarPic,      9000
 	pic_money EngineerPic,     5000

@@ -45,7 +45,7 @@ _BlaineVolcanoBadgeInfoText::
 _ReceivedTM38Text::
 	text "<PLAYER> received"
 	line "@"
-	text_ram wStringBuffer
+	text_ram wcf4b
 	text "!@"
 	text_end
 
@@ -193,7 +193,7 @@ _CinnabarGymAfterBattleText7::
 
 _CinnabarGymGuidePreBattleText::
 	text "Yo! Champ in"
-	line "making!"
+	line "the making!"
 
 	para "The hot-headed"
 	line "BLAINE is a fire"

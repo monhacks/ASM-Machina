@@ -17,7 +17,7 @@ _SecretHouseText_4a350::
 _ReceivedHM03Text::
 	text "<PLAYER> received"
 	line "@"
-	text_ram wStringBuffer
+	text_ram wcf4b
 	text "!@"
 	text_end
 

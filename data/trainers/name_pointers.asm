@@ -6,9 +6,9 @@ TrainerNamePointers:
 	dw wTrainerName
 	dw .JrTrainerMName
 	dw .JrTrainerFName
-	dw .PokemaniacName
+	dw wTrainerName ;.PokemaniacName
 	dw .SuperNerdName
-	dw wTrainerName
+	dw .PokemaniacName ;wTrainerName
 	dw wTrainerName
 	dw .BurglarName
 	dw .EngineerName

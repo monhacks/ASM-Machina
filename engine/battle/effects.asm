@@ -1,3 +1,65 @@
+; blatantly taken from "shinpokered" by Jojobear13, but modified so that a separate setting function is unneeded. Placed here for MissingNo's sake
+;joenote - custom functions for determining which trainerAI pkmn have already been sent out before
+;a=party position of pkmn (like wWhichPokemon). If checking, zero flag gives bit state (1 means sent out already)
+CheckAISentOut:
+	ld a, [wWhichPokemon]	
+	cp $05
+	jr z, .party5
+	cp $04
+	jr z, .party4
+	cp $03
+	jr z, .party3
+	cp $02
+	jr z, .party2
+	cp $01
+	jr z, .party1
+	jr .party0
+.party5
+	ld a, [wFontLoaded]
+	bit 6, a
+	jr nz, .partyret
+	set 6, a
+	ld a, 0
+	ret
+.party4
+	ld a, [wFontLoaded]
+	bit 5, a
+	jr nz, .partyret
+	set 5, a
+	ld a, 0
+	ret
+.party3
+	ld a, [wFontLoaded]
+	bit 4, a
+	jr nz, .partyret
+	set 4, a
+	ld a, 0
+	ret
+.party2
+	ld a, [wFontLoaded]
+	bit 3, a
+	jr nz, .partyret
+	set 3, a
+	ld a, 0
+	ret
+.party1
+	ld a, [wFontLoaded]
+	bit 2, a
+	jr nz, .partyret
+	set 2, a
+	ld a, 0
+	ret
+.party0
+	ld a, [wFontLoaded]
+	bit 1, a
+	jr nz, .partyret
+	set 1, a
+	ld a, 0
+	ret
+.partyret
+    ld a, 1
+	ret
+
 JumpMoveEffect:
 	call _JumpMoveEffect
 	ld b, $1
@@ -23,6 +85,82 @@ _JumpMoveEffect:
 
 INCLUDE "data/moves/effects_pointers.asm"
 
+AmnesiaEffect:
+    ldh a, [hWhoseTurn]
+	and a
+	jr nz, .enemyUsed
+.playerUsed
+    ld hl, wPlayerBattleStatus1
+	bit CONFUSED, [hl]
+	jr nz, .amnesiaFailed
+	set CONFUSED, [hl] ; confused
+	call BattleRandom
+	and 3
+	inc a
+	inc a ; confused for 2-5 turns
+	ld [wPlayerConfusedCounter], a
+	ld a, SPECIAL_UP2_EFFECT
+	ld [wPlayerMoveEffect], a
+	jp StatModifierUpEffect
+.enemyUsed
+    ld hl, wEnemyBattleStatus1
+	bit CONFUSED, [hl]
+	jr nz, .amnesiaFailed
+	set CONFUSED, [hl] ; confused
+	call BattleRandom
+	and 3
+	inc a
+	inc a ; confused for 2-5 turns
+	ld [wEnemyConfusedCounter], a
+	ld a, SPECIAL_UP2_EFFECT
+	ld [wEnemyMoveEffect], a
+	jp StatModifierUpEffect
+.amnesiaFailed
+    ld c, 50
+	call DelayFrames
+	jp PrintButItFailedText_
+
+TriAttackEffect:
+	call BattleRandom
+	cp $54
+	jr c, .paralyzeChoice
+	cp $A8
+	jr c, .burnChoice
+	jr .freezeChoice
+.paralyzeChoice
+    ldh a, [hWhoseTurn]
+	and a
+	jr nz, .enemyParalyzeChoice
+	ld a, PARALYZE_SIDE_EFFECT1
+	ld [wPlayerMoveEffect], a
+	jp FreezeBurnParalyzeEffect
+.enemyParalyzeChoice
+	ld a, PARALYZE_SIDE_EFFECT1
+	ld [wEnemyMoveEffect], a
+	jp FreezeBurnParalyzeEffect
+.burnChoice
+    ldh a, [hWhoseTurn]
+	and a
+	jr nz, .enemyBurnChoice
+	ld a, BURN_SIDE_EFFECT1
+	ld [wPlayerMoveEffect], a
+	jp FreezeBurnParalyzeEffect
+.enemyBurnChoice
+	ld a, BURN_SIDE_EFFECT1
+	ld [wEnemyMoveEffect], a
+	jp FreezeBurnParalyzeEffect
+.freezeChoice
+    ldh a, [hWhoseTurn]
+	and a
+	jr nz, .enemyFreezeChoice
+	ld a, FREEZE_SIDE_EFFECT
+	ld [wPlayerMoveEffect], a
+	jp FreezeBurnParalyzeEffect
+.enemyFreezeChoice
+	ld a, FREEZE_SIDE_EFFECT
+	ld [wEnemyMoveEffect], a
+	jp FreezeBurnParalyzeEffect
+
 SleepEffect:
 	ld de, wEnemyMonStatus
 	ld bc, wEnemyBattleStatus2
@@ -37,7 +175,7 @@ SleepEffect:
 	bit NEEDS_TO_RECHARGE, a ; does the target need to recharge? (hyper beam)
 	res NEEDS_TO_RECHARGE, a ; target no longer needs to recharge
 	ld [bc], a
-	jr nz, .setSleepCounter ; if the target had to recharge, all hit tests will be skipped
+	jr nz, .changeBattleStatus ; if the target had to recharge, all hit tests will be skipped
 	                        ; including the event where the target already has another status
 	ld a, [de]
 	ld b, a
@@ -55,6 +193,16 @@ SleepEffect:
 	ld a, [wMoveMissed]
 	and a
 	jr nz, .didntAffect
+.changeBattleStatus
+	ld bc, wEnemyBattleStatus1
+	ldh a, [hWhoseTurn]
+	and a
+	jp z, .resolveTrap
+	ld bc, wPlayerBattleStatus1
+.resolveTrap
+	ld a, [bc]
+	res USING_TRAPPING_MOVE, a
+	ld [bc], a
 .setSleepCounter
 ; set target's sleep counter to a random number between 1 and 7
 	call BattleRandom
@@ -228,7 +376,7 @@ FreezeBurnParalyzeEffect:
 	jr z, .burn1
 	cp FREEZE_SIDE_EFFECT
 	jr z, .freeze1
-; .paralyze1
+.paralyze1
 	ld a, 1 << PAR
 	ld [wEnemyMonStatus], a
 	call QuarterSpeedDueToParalysis ; quarter speed of affected mon
@@ -244,7 +392,9 @@ FreezeBurnParalyzeEffect:
 	ld hl, BurnedText
 	jp PrintText
 .freeze1
-	call ClearHyperBeam ; resets hyper beam (recharge) condition from target
+	ld a, [wEnemyBattleStatus1]
+	res USING_TRAPPING_MOVE, a
+	;call ClearHyperBeam ; resets hyper beam (recharge) condition from target
 	ld a, 1 << FRZ
 	ld [wEnemyMonStatus], a
 	ld a, ANIM_A9
@@ -281,7 +431,7 @@ FreezeBurnParalyzeEffect:
 	jr z, .burn2
 	cp FREEZE_SIDE_EFFECT
 	jr z, .freeze2
-; .paralyze2
+.paralyze2
 	ld a, 1 << PAR
 	ld [wBattleMonStatus], a
 	call QuarterSpeedDueToParalysis
@@ -293,6 +443,8 @@ FreezeBurnParalyzeEffect:
 	ld hl, BurnedText
 	jp PrintText
 .freeze2
+	ld a, [wEnemyBattleStatus1]
+	res USING_TRAPPING_MOVE, a
 ; hyper beam bits aren't reseted for opponent's side
 	ld a, 1 << FRZ
 	ld [wBattleMonStatus], a
@@ -308,7 +460,7 @@ FrozenText:
 	text_end
 
 CheckDefrost:
-; any fire-type move that has a chance inflict burn (all but Fire Spin) will defrost a frozen target
+; any fire-type move that has a chance to inflict burn (all but Fire Spin) will defrost a frozen target
 	and 1 << FRZ ; are they frozen?
 	ret z ; return if so
 	ldh a, [hWhoseTurn]
@@ -325,6 +477,9 @@ CheckDefrost:
 	call AddNTimes
 	xor a
 	ld [hl], a ; clear status in roster
+	ld hl, wEnemySelectedMove ; prevent use of move after defrosting -OEA
+	ld a, $ff
+	ld [hl], a
 	ld hl, FireDefrostedText
 	jr .common
 .opponent
@@ -337,6 +492,9 @@ CheckDefrost:
 	ld bc, wPartyMon2 - wPartyMon1
 	call AddNTimes
 	xor a
+	ld [hl], a
+	ld hl, wPlayerSelectedMove
+	ld a, $ff
 	ld [hl], a
 	ld hl, FireDefrostedText
 .common
@@ -355,6 +513,17 @@ StatModifierUpEffect:
 	ld hl, wEnemyMonStatMods
 	ld de, wEnemyMoveEffect
 .statModifierUpEffect
+	push hl
+	push de
+	push bc
+	call MoveHitTest ; apply accuracy tests
+	pop bc
+	pop de
+	pop hl
+	ld a, [wMoveMissed]
+	and a
+	jp nz, StatMoveMissed
+
 	ld a, [de]
 	sub ATTACK_UP1_EFFECT
 	cp EVASION_UP1_EFFECT + $3 - ATTACK_UP1_EFFECT ; covers all +1 effects
@@ -545,14 +714,14 @@ StatModifierDownEffect:
 	ld de, wEnemyMoveEffect
 	ld bc, wPlayerBattleStatus1
 	ld a, [wLinkState]
-	cp LINK_STATE_BATTLING
-	jr z, .statModifierDownEffect
-	call BattleRandom
-	cp $40 ; 1/4 chance to miss by in regular battle
-	jp c, MoveMissed
+	;cp LINK_STATE_BATTLING
+	;jr z, .statModifierDownEffect
+	;call BattleRandom
+	;cp $40 ; 1/4 chance to miss by in regular battle
+	;jp c, StatMoveMissed
 .statModifierDownEffect
 	call CheckTargetSubstitute ; can't hit through substitute
-	jp nz, MoveMissed
+	jp nz, StatMoveMissed
 	ld a, [de]
 	cp ATTACK_DOWN_SIDE_EFFECT
 	jr c, .nonSideEffect
@@ -572,10 +741,10 @@ StatModifierDownEffect:
 	pop hl
 	ld a, [wMoveMissed]
 	and a
-	jp nz, MoveMissed
+	jp nz, StatMoveMissed
 	ld a, [bc]
 	bit INVULNERABLE, a ; fly/dig
-	jp nz, MoveMissed
+	jp nz, StatMoveMissed
 	ld a, [de]
 	sub ATTACK_DOWN1_EFFECT
 	cp EVASION_DOWN1_EFFECT + $3 - ATTACK_DOWN1_EFFECT ; covers all -1 effects
@@ -689,7 +858,7 @@ UpdateLoweredStatDone:
 	ld hl, MonsStatsFellText
 	call PrintText
 
-; These where probably added given that a stat-down move affecting speed or attack will override
+; These were probably added given that a stat-down move affecting speed or attack will override
 ; the stat penalties from paralysis and burn respectively.
 ; But they are always called regardless of the stat affected by the stat-down move.
 	call QuarterSpeedDueToParalysis
@@ -707,10 +876,12 @@ CantLowerAnymore:
 	ld hl, NothingHappenedText
 	jp PrintText
 
-MoveMissed:
+StatMoveMissed:
 	ld a, [de]
 	cp $44
 	ret nc
+	ld c, 50
+	call DelayFrames
 	jp ConditionalPrintButItFailed
 
 MonsStatsFellText:
@@ -751,7 +922,7 @@ PrintStatText:
 	jr z, .findStatName_outer
 	jr .findStatName_inner
 .foundStatName
-	ld de, wStringBuffer
+	ld de, wcf4b
 	ld bc, $a
 	jp CopyData
 
@@ -808,7 +979,7 @@ ThrashPetalDanceEffect:
 SwitchAndTeleportEffect:
 	ldh a, [hWhoseTurn]
 	and a
-	jr nz, .handleEnemy
+	jp nz, .SATHandleEnemy
 	ld a, [wIsInBattle]
 	dec a
 	jr nz, .notWildBattle1
@@ -841,16 +1012,69 @@ SwitchAndTeleportEffect:
 	inc a
 	ld [wEscapedFromBattle], a
 	ld a, [wPlayerMoveNum]
-	jr .playAnimAndPrintText
-.notWildBattle1
-	ld c, 50
-	call DelayFrames
-	ld hl, IsUnaffectedText
+	jp .playAnimAndPrintText
+.notWildBattle1    
+    ld a, [wLinkState]
+	cp LINK_STATE_BATTLING
+	jr z, .playerFailure
 	ld a, [wPlayerMoveNum]
 	cp TELEPORT
-	jp nz, PrintText
+	jr nz, .switchEnemyOut
+.playerFailure
+	ld c, 50
+	call DelayFrames
 	jp PrintButItFailedText_
-.handleEnemy
+.switchEnemyOut
+	call MoveHitTest
+	ld a, [wMoveMissed]
+	and a
+	jr nz, .playerFailure
+.loop
+	ld c, 0
+	call BattleRandom
+	cp 17 percent + 1
+	jr c, .next
+	inc c
+	cp 34 percent + 1
+	jr c, .next
+	inc c
+	cp 51 percent + 1
+	jr c, .next
+	inc c
+	cp 68 percent + 1
+	jr c, .next
+	inc c
+	cp 85 percent + 1
+	jr c, .next
+	inc c
+.next
+    ld hl, wEnemyPartyCount
+	ld a, c
+	cp [hl]
+	jr nc, .loop
+	ld hl, wEnemyMonPartyPos
+	cp [hl]
+	jr z, .playerFailure
+	ld [wWhichPokemon], a
+	ld hl, wEnemyMon1HP
+	ld bc, wEnemyMon2 - wEnemyMon1
+	call AddNTimes
+	ld a, [hli]
+	or [hl]
+	jr z, .loop
+.nextNext
+	call ReadPlayerMonCurHPAndStatus
+	xor a
+	ld [wAnimationType], a
+	ld a, [wPlayerMoveNum]
+	push af
+	call PlayBattleAnimation
+	ld c, 20
+	call DelayFrames
+	pop af
+	jpfar SwitchEnemyMon
+	ret
+.SATHandleEnemy
 	ld a, [wIsInBattle]
 	dec a
 	jr nz, .notWildBattle2
@@ -883,15 +1107,68 @@ SwitchAndTeleportEffect:
 	inc a
 	ld [wEscapedFromBattle], a
 	ld a, [wEnemyMoveNum]
-	jr .playAnimAndPrintText
+	jp .playAnimAndPrintText
 .notWildBattle2
-	ld c, 50
-	call DelayFrames
-	ld hl, IsUnaffectedText
+    ld a, [wLinkState]
+	cp LINK_STATE_BATTLING
+	jr z, .enemyFailure
 	ld a, [wEnemyMoveNum]
 	cp TELEPORT
-	jp nz, PrintText
-	jp ConditionalPrintButItFailed
+	jr nz, .switchPlayerOut
+.enemyFailure
+	ld c, 50
+	call DelayFrames
+	jp PrintButItFailedText_
+.switchPlayerOut
+	call MoveHitTest
+	ld a, [wMoveMissed]
+	and a
+	jr nz, .enemyFailure
+.loop2
+	ld c, 0
+	call BattleRandom
+	cp 17 percent + 1
+	jr c, .next2
+	inc c
+	cp 34 percent + 1
+	jr c, .next2
+	inc c
+	cp 51 percent + 1
+	jr c, .next2
+	inc c
+	cp 68 percent + 1
+	jr c, .next2
+	inc c
+	cp 85 percent + 1
+	jr c, .next2
+	inc c
+.next2
+    ld hl, wPartyCount
+	ld a, c
+	cp [hl]
+	jr nc, .loop2
+	ld hl, wPlayerMonNumber
+	cp [hl]
+	jr z, .enemyFailure
+	ld [wWhichPokemon], a
+	ld hl, wPartyMon1HP
+	ld bc, wPartyMon2 - wPartyMon1
+	call AddNTimes
+	ld a, [hli]
+	or [hl]
+	jr z, .loop2
+.nextNext2
+	call ReadPlayerMonCurHPAndStatus
+	xor a
+	ld [wAnimationType], a
+	ld a, [wEnemyMoveNum]
+	push af
+	call PlayBattleAnimation
+	ld c, 20
+	call DelayFrames
+	pop af
+	jpfar SwitchPlayerMon
+	ret
 .playAnimAndPrintText
 	push af
 	call PlayBattleAnimation
@@ -1086,7 +1363,7 @@ TrappingEffect:
 .trappingEffect
 	bit USING_TRAPPING_MOVE, [hl]
 	ret nz
-	call ClearHyperBeam ; since this effect is called before testing whether the move will hit,
+	;call ClearHyperBeam ; since this effect is called before testing whether the move will hit,
                         ; the target won't need to recharge even if the trapping move missed
 	set USING_TRAPPING_MOVE, [hl] ; mon is now using a trapping move
 	call BattleRandom ; 3/8 chance for 2 and 3 attacks, and 1/8 chance for 4 and 5 attacks
@@ -1315,11 +1592,11 @@ DisableEffect:
 	and a
 	ld hl, wBattleMonPP
 	jr nz, .enemyTurn
-	ld a, [wLinkState]
-	cp LINK_STATE_BATTLING
+	;ld a, [wLinkState]
+	;cp LINK_STATE_BATTLING
 	pop hl ; wEnemyMonMoves
-	jr nz, .playerTurnNotLinkBattle
-; .playerTurnLinkBattle
+	;jr nz, .playerTurnNotLinkBattle
+.playerTurnLinkBattle
 	push hl
 	ld hl, wEnemyMonPP
 .enemyTurn
@@ -1378,8 +1655,16 @@ HazeEffect:
 	jpfar HazeEffect_
 
 HealEffect:
+	call MoveHitTest
+	ld a, [wMoveMissed]
+	and a
+	jr nz, .healMoveMissed
 	jpfar HealEffect_
-
+.healMoveMissed
+	ld c, 50
+	call DelayFrames
+	jp PrintButItFailedText_
+	
 TransformEffect:
 	jpfar TransformEffect_
 

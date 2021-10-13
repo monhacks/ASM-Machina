@@ -72,7 +72,7 @@ _VitaminStatRoseText::
 	text_ram wcd6d
 	text "'s"
 	line "@"
-	text_ram wStringBuffer
+	text_ram wcf4b
 	text " rose."
 	prompt
 
@@ -138,13 +138,13 @@ _RestorePPWhichTechniqueText::
 	done
 
 _PPMaxedOutText::
-	text_ram wStringBuffer
+	text_ram wcf4b
 	text "'s PP"
 	line "is maxed out."
 	prompt
 
 _PPIncreasedText::
-	text_ram wStringBuffer
+	text_ram wcf4b
 	text "'s PP"
 	line "increased."
 	prompt
@@ -164,11 +164,11 @@ _BootedUpHMText::
 _TeachMachineMoveText::
 	text "It contained"
 	line "@"
-	text_ram wStringBuffer
+	text_ram wcf4b
 	text "!"
 
 	para "Teach @"
-	text_ram wStringBuffer
+	text_ram wcf4b
 	text_start
 	line "to a #MON?"
 	done
@@ -178,12 +178,12 @@ _MonCannotLearnMachineMoveText::
 	text " is not"
 	line "compatible with"
 	cont "@"
-	text_ram wStringBuffer
+	text_ram wcf4b
 	text "."
 
 	para "It can't learn"
 	line "@"
-	text_ram wStringBuffer
+	text_ram wcf4b
 	text "."
 	prompt
 

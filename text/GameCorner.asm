@@ -8,8 +8,9 @@ _CeladonGameCornerText1::
 	done
 
 _CeladonGameCornerText_48d22::
-	text "Welcome to ROCKET"
-	line "GAME CORNER!"
+	text "Welcome to"
+	line "CELADON GAME"
+	cont "CORNER!"
 
 	para "Do you need some"
 	line "game coins?"
@@ -88,12 +89,13 @@ _CeladonGameCornerText_48dca::
 
 	para "You have better"
 	line "things to do,"
-	cont "champ in making!"
+	cont "champ in the"
 
-	para "CELADON GYM's"
-	line "LEADER is ERIKA!"
-	cont "She uses grass-"
-	cont "type #MON!"
+	para "making! CELADON"
+	line "GYM's LEADER is"
+	cont "ERIKA! She uses"
+	cont "grass-type"
+	cont "#MON!"
 
 	para "She might appear"
 	line "docile, but don't"

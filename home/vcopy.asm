@@ -127,7 +127,7 @@ AutoBgMapTransfer::
 	ld a, h
 	ldh [hSPTemp], a
 	ld a, l
-	ldh [hSPTemp + 1], a ; save stack pointer
+	ldh [hSPTemp + 1], a ; save stack pinter
 	ldh a, [hAutoBGTransferPortion]
 	and a
 	jr z, .transferTopThird
@@ -377,7 +377,7 @@ UpdateMovingBgTiles::
 
 	ldh a, [hTileAnimations]
 	and a
-	ret z
+	ret z ; no animations if indoors (or if a menu set this to 0)
 
 	ldh a, [hMovingBGTilesCounter1]
 	inc a
@@ -416,7 +416,7 @@ UpdateMovingBgTiles::
 	ldh a, [hTileAnimations]
 	rrca
 	ret nc
-
+; if in a cave, no flower animations
 	xor a
 	ldh [hMovingBGTilesCounter1], a
 	ret

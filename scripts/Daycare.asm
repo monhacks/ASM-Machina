@@ -35,9 +35,9 @@ DayCareMText1:
 	pop af
 	ld hl, DayCareAllRightThenText
 	jp c, .done
-	callfar KnowsHMMove
-	ld hl, DayCareCantAcceptMonWithHMText
-	jp c, .done
+	;callfar KnowsHMMove
+	;ld hl, DayCareCantAcceptMonWithHMText
+	;jp c, .done
 	xor a
 	ld [wPartyAndBillsPCSavedMenuItem], a
 	ld a, [wWhichPokemon]

@@ -1507,3 +1507,8 @@ _VictreebelDexEntry::
 	next "has ever returned"
 	next "from there"
 	dex
+	
+;_MissingNoDexEntry::
+	;text "Comment under"
+	;next "construction"
+	;dex

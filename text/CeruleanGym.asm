@@ -107,7 +107,7 @@ _CeruleanGymAfterBattleText2::
 
 _CeruleanGymGuidePreBattleText::
 	text "Yo! Champ in"
-	line "making!"
+	line "the making!"
 
 	para "Here's my advice!"
 

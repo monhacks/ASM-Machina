@@ -1,14 +1,14 @@
 _Route15GateUpstairsText_4968c::
-	text "EXP.ALL gives"
-	line "EXP points to all"
-	cont "the #MON with"
-	cont "you, even if they"
-	cont "don't fight."
+	text "This replica"
+	line "badge holds rocks"
+	cont "which you can"
+	cont "throw in a fight"
 
-	para "It does, however,"
-	line "reduce the amount"
-	cont "of EXP for each"
-	cont "#MON."
+	para "to make it easier"
+	line "to catch wild"
+	cont "#MON. It's"
+	cont "like you're on"
+	cont "safari!"
 
 	para "If you don't need"
 	line "it, you should "

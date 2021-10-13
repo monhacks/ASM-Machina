@@ -190,7 +190,8 @@ SECTION "Battle Engine 7", ROMX
 INCLUDE "data/moves/moves.asm"
 INCLUDE "data/pokemon/base_stats.asm"
 INCLUDE "data/pokemon/cries.asm"
-INCLUDE "engine/battle/unused_stats_functions.asm"
+INCLUDE "engine/battle/decrement_pp.asm"
+;INCLUDE "engine/battle/unused_stats_functions.asm"
 INCLUDE "engine/battle/scroll_draw_trainer_pic.asm"
 INCLUDE "engine/battle/trainer_ai.asm"
 INCLUDE "engine/battle/draw_hud_pokeball_gfx.asm"
@@ -308,7 +309,8 @@ INCLUDE "engine/events/hidden_objects/pokecenter_pc.asm"
 
 SECTION "Battle Engine 11", ROMX
 
-INCLUDE "engine/battle/decrement_pp.asm"
+INCLUDE "engine/battle/unused_stats_functions.asm"
+;INCLUDE "engine/battle/decrement_pp.asm"
 INCLUDE "gfx/version.asm"
 
 

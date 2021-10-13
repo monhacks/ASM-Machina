@@ -1,4 +1,4 @@
-MAX_LEVEL EQU 100
+MAX_LEVEL EQU 99 ;100
 
 NUM_MOVES EQU 4
 
@@ -50,10 +50,10 @@ SONICBOOM_DAMAGE   EQU 20
 DRAGON_RAGE_DAMAGE EQU 40
 
 ; type effectiveness factors, scaled by 10
-SUPER_EFFECTIVE    EQU 20
-MORE_EFFECTIVE     EQU 15
+SUPER_EFFECTIVE    EQU 15 ;20
+MORE_EFFECTIVE     EQU 13 ;15
 EFFECTIVE          EQU 10
-NOT_VERY_EFFECTIVE EQU 05
+NOT_VERY_EFFECTIVE EQU 07 ;05
 NO_EFFECT          EQU 00
 
 ; non-volatile statuses
@@ -86,7 +86,8 @@ SPDSPCDV_TRAINER EQU $88
 	const USING_X_ACCURACY    ; 0
 	const PROTECTED_BY_MIST   ; 1
 	const GETTING_PUMPED      ; 2 ; Focus Energy
-	const_skip                ; 3 ; unused
+	;const_skip                ; 3 ; unused
+	const UNCOUNTERABLE	      ; 3 -OEA
 	const HAS_SUBSTITUTE_UP   ; 4
 	const NEEDS_TO_RECHARGE   ; 5 ; Hyper Beam
 	const USING_RAGE          ; 6
@@ -98,3 +99,6 @@ SPDSPCDV_TRAINER EQU $88
 	const HAS_LIGHT_SCREEN_UP ; 1
 	const HAS_REFLECT_UP      ; 2
 	const TRANSFORMED         ; 3
+	const STRUGGLING          ; 4 -OEA
+	const SUPER_AFFECTED      ; 5 -OEA
+	const SWITCHING           ; 6 -OEA

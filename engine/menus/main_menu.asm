@@ -127,7 +127,7 @@ MainMenu:
 InitOptions:
 	ld a, 1 ; no delay
 	ld [wLetterPrintingDelayFlags], a
-	ld a, 3 ; medium speed
+	;ld a, 3 ; medium speed
 	ld [wOptions], a
 	ret
 
@@ -336,7 +336,7 @@ ContinueText:
 
 NewGameText:
 	db   "NEW GAME"
-	next "OPTION@"
+	next "OPTIONS@"
 
 CableClubOptionsText:
 	db   "TRADE CENTER"
@@ -548,50 +548,59 @@ DisplayOptionMenu:
 	jp .loop
 .cursorInBattleAnimation
 	ld a, [wOptionsBattleAnimCursorX] ; battle animation cursor X coordinate
-	xor $0b ; toggle between 1 and 10
+	;xor $0b ; toggle between 1 and 10
+	xor $09
 	ld [wOptionsBattleAnimCursorX], a
 	jp .eraseOldMenuCursor
 .cursorInBattleStyle
 	ld a, [wOptionsBattleStyleCursorX] ; battle style cursor X coordinate
-	xor $0b ; toggle between 1 and 10
+	;xor $0b ; toggle between 1 and 10
+	xor $09
 	ld [wOptionsBattleStyleCursorX], a
 	jp .eraseOldMenuCursor
 .pressedLeftInTextSpeed
 	ld a, [wOptionsTextSpeedCursorX] ; text speed cursor X coordinate
 	cp 1
 	jr z, .updateTextSpeedXCoord
-	cp 7
+	;cp 7
+	cp 6
 	jr nz, .fromSlowToMedium
-	sub 6
+	;sub 6
+	sub 5
 	jr .updateTextSpeedXCoord
 .fromSlowToMedium
 	sub 7
 	jr .updateTextSpeedXCoord
 .pressedRightInTextSpeed
 	ld a, [wOptionsTextSpeedCursorX] ; text speed cursor X coordinate
-	cp 14
+	;cp 14
+	cp 13
 	jr z, .updateTextSpeedXCoord
-	cp 7
+	;cp 7
+	cp 6
 	jr nz, .fromFastToMedium
 	add 7
 	jr .updateTextSpeedXCoord
 .fromFastToMedium
-	add 6
+	;add 6
+	add 5
 .updateTextSpeedXCoord
 	ld [wOptionsTextSpeedCursorX], a ; text speed cursor X coordinate
 	jp .eraseOldMenuCursor
 
 TextSpeedOptionText:
 	db   "TEXT SPEED"
-	next " FAST  MEDIUM SLOW@"
+	;next " FAST  MEDIUM SLOW@"
+	next " FAST MEDIUM SLOW@"
 
 BattleAnimationOptionText:
 	db   "BATTLE ANIMATION"
-	next " ON       OFF@"
+	next " ON     OFF@"
 
 BattleStyleOptionText:
 	db   "BATTLE STYLE"
-	next " SHIFT    SET@"
+	;next " SHIFT    SET@"
+	next " SET    SHIFT@"
 
 OptionMenuCancelText:
 	db "CANCEL@"
@@ -678,10 +687,13 @@ SetCursorPositionsFromOptions:
 ; 00: X coordinate of menu cursor
 ; 01: delay after printing a letter (in frames)
 TextSpeedOptionData:
-	db 14, 5 ; Slow
-	db  7, 3 ; Medium
+	;db 14, 5 ; Slow
+	db 13, 5 ; Slow
+	;db  7, 3 ; Medium
+	db  6, 3 ; Medium
 	db  1, 1 ; Fast
-	db 7 ; default X coordinate (Medium)
+	;db 7 ; default X coordinate (Medium)
+	db 1
 	db -1 ; end
 
 CheckForPlayerNameInSRAM:

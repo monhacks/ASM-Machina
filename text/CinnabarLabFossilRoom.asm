@@ -30,7 +30,7 @@ _Lab4Text_75dd5::
 	line "back to life!"
 
 	para "It was @"
-	text_ram wStringBuffer
+	text_ram wcf4b
 	text_start
 	line "like I think!"
 	prompt
@@ -43,7 +43,7 @@ _Lab4Text_610ae::
 
 	para "It is fossil of"
 	line "@"
-	text_ram wStringBuffer
+	text_ram wcf4b
 	text ", a"
 	cont "#MON that is"
 	cont "already extinct!"

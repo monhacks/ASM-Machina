@@ -1,6 +1,6 @@
 GiveItem::
 ; Give player quantity c of item b,
-; and copy the item's name to wStringBuffer.
+; and copy the item's name to wcf4b.
 ; Return carry on success.
 	ld a, b
 	ld [wd11e], a
@@ -11,7 +11,7 @@ GiveItem::
 	call AddItemToInventory
 	ret nc
 	call GetItemName
-	call CopyToStringBuffer
+	call CopyStringToCF4B
 	scf
 	ret
 

@@ -1,22 +1,22 @@
-def_object_events: MACRO
-REDEF _NUM_OBJECT_EVENTS EQUS "_NUM_OBJECT_EVENTS_\@"
-	db {_NUM_OBJECT_EVENTS}
-{_NUM_OBJECT_EVENTS} = 0
+def_objects: MACRO
+REDEF _NUM_OBJECTS EQUS "_NUM_OBJECTS_\@"
+	db {_NUM_OBJECTS}
+{_NUM_OBJECTS} = 0
 ENDM
 
-;\1 x position
-;\2 y position
-;\3 sprite id
+;\1 sprite id
+;\2 x position
+;\3 y position
 ;\4 movement (WALK/STAY)
 ;\5 range or direction
 ;\6 text id
 ;\7 items only: item id
 ;\7 trainers only: trainer class/pokemon id
 ;\8 trainers only: trainer number/pokemon level
-object_event: MACRO
-	db \3
+object: MACRO
+	db \1
+	db \3 + 4
 	db \2 + 4
-	db \1 + 4
 	db \4
 	db \5
 	IF _NARG > 7
@@ -29,43 +29,43 @@ object_event: MACRO
 	ELSE
 		db \6
 	ENDC
-{_NUM_OBJECT_EVENTS} = {_NUM_OBJECT_EVENTS} + 1
+{_NUM_OBJECTS} = {_NUM_OBJECTS} + 1
 ENDM
 
-def_warp_events: MACRO
-REDEF _NUM_WARP_EVENTS EQUS "_NUM_WARP_EVENTS_\@"
-	db {_NUM_WARP_EVENTS}
-{_NUM_WARP_EVENTS} = 0
+def_warps: MACRO
+REDEF _NUM_WARPS EQUS "_NUM_WARPS_\@"
+	db {_NUM_WARPS}
+{_NUM_WARPS} = 0
 ENDM
 
 ;\1 x position
 ;\2 y position
-;\3 destination map (-1 = wLastMap)
-;\4 destination warp id; starts at 1 (internally at 0)
-warp_event: MACRO
-	db \2, \1, \4 - 1, \3
-_WARP_{d:{_NUM_WARP_EVENTS}}_X = \1
-_WARP_{d:{_NUM_WARP_EVENTS}}_Y = \2
-{_NUM_WARP_EVENTS} = {_NUM_WARP_EVENTS} + 1
+;\3 destination warp id
+;\4 destination map (-1 = wLastMap)
+warp: MACRO
+	db \2, \1, \3, \4
+_WARP_{d:{_NUM_WARPS}}_X = \1
+_WARP_{d:{_NUM_WARPS}}_Y = \2
+{_NUM_WARPS} = {_NUM_WARPS} + 1
 ENDM
 
-def_bg_events: MACRO
-REDEF _NUM_BG_EVENTS EQUS "_NUM_BG_EVENTS_\@"
-	db {_NUM_BG_EVENTS}
-{_NUM_BG_EVENTS} = 0
+def_signs: MACRO
+REDEF _NUM_SIGNS EQUS "_NUM_SIGNS_\@"
+	db {_NUM_SIGNS}
+{_NUM_SIGNS} = 0
 ENDM
 
 ;\1 x position
 ;\2 y position
 ;\3 sign id
-bg_event: MACRO
+sign: MACRO
 	db \2, \1, \3
-{_NUM_BG_EVENTS} = {_NUM_BG_EVENTS} + 1
+{_NUM_SIGNS} = {_NUM_SIGNS} + 1
 ENDM
 
 ;\1 source map
 def_warps_to: MACRO
-	FOR n, _NUM_WARP_EVENTS
+	FOR n, _NUM_WARPS
 		warp_to _WARP_{d:n}_X, _WARP_{d:n}_Y, \1_WIDTH
 	ENDR
 ENDM

@@ -42,7 +42,7 @@ _TM41PreText::
 _ReceivedTM41Text::
 	text "<PLAYER> received"
 	line "@"
-	text_ram wStringBuffer
+	text_ram wcf4b
 	text "!@"
 	text_end
 
@@ -50,11 +50,12 @@ _TM41ExplanationText::
 	text "TM41 teaches"
 	line "SOFTBOILED!"
 
-	para "Only one #MON"
-	line "can use it!"
+	para "Three #MON"
+	line "alone can use it!"
 
-	para "That #MON is"
-	line "CHANSEY!"
+	para "They are CHANSEY,"
+	line "EXEGGCUTE, and"
+	cont "EXEGGUTOR!"
 	done
 
 _TM41NoRoomText::
@@ -82,8 +83,8 @@ _CeladonCityText8::
 	done
 
 _CeladonCityText9::
-	text "Keep out of TEAM"
-	line "ROCKET's way!"
+	text "Keep out of our"
+	line "way, kid!"
 	done
 
 _CeladonCityText10::
@@ -118,7 +119,7 @@ _CeladonCityText13::
 	done
 
 _CeladonCityText14::
-	text "CELADON MANSION"
+	text "CELADON CONDOS "
 	done
 
 _CeladonCityText15::
@@ -148,7 +149,8 @@ _CeladonCityText17::
 	done
 
 _CeladonCityText18::
-	text "ROCKET GAME CORNER"
-	line "The playground"
+	text "CELADON GAME"
+	line "CORNER"
+	cont "The playground"
 	cont "for grown-ups!"
 	done

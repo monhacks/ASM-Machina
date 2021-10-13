@@ -62,6 +62,7 @@ EndOfBattle:
 	ld [wListScrollOffset], a
 	ld hl, wPlayerStatsToDouble
 	ld b, $18
+	;predef HealParty
 .loop
 	ld [hli], a
 	dec b

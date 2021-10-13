@@ -40,6 +40,13 @@ HealEffect_:
 	ld hl, FellAsleepBecameHealthyText ; if mon had an status
 .printRestText
 	call PrintText
+	ld hl, wPlayerBattleStatus3
+	ldh a, [hWhoseTurn]
+	and a
+	jr z, .next
+	ld hl, wEnemyBattleStatus3
+.next
+	res BADLY_POISONED, [hl] ;clear Toxic status so damage does not compound -OEA
 	pop af
 	pop de
 	pop hl

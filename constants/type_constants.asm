@@ -2,7 +2,7 @@
 	const_def
 
 PHYSICAL EQU const_value
-	const NORMAL       ; $00
+	const SOUND        ; $00
 	const FIGHTING     ; $01
 	const FLYING       ; $02
 	const POISON       ; $03

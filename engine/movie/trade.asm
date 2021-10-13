@@ -189,7 +189,7 @@ LoadTradingGFXAndMonNames:
 	ld [wd11e], a
 	call GetMonName
 	ld hl, wcd6d
-	ld de, wStringBuffer
+	ld de, wcf4b
 	ld bc, NAME_LENGTH
 	call CopyData
 	ld a, [wTradedEnemyMonSpecies]

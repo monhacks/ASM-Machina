@@ -3,7 +3,7 @@
 	db  65,  60,  70,  40,  75
 	;   hp  atk  def  spd  spc
 
-	db NORMAL, NORMAL ; type
+	db GHOST, GHOST ; type
 	db 45 ; catch rate
 	db 130 ; base exp
 
@@ -18,7 +18,7 @@
 	     HYPER_BEAM,   RAGE,         THUNDERBOLT,  THUNDER,      PSYCHIC_M,    \
 	     TELEPORT,     MIMIC,        DOUBLE_TEAM,  REFLECT,      BIDE,         \
 	     SWIFT,        SKULL_BASH,   REST,         THUNDER_WAVE, PSYWAVE,      \
-	     TRI_ATTACK,   SUBSTITUTE,   FLASH
+	     TRI_ATTACK,   SUBSTITUTE,   FLASH,        NIGHT_SHADE
 	; end
 
 	db 0 ; padding

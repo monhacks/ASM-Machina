@@ -21,6 +21,6 @@ _CeladonMansion1Text4::
 	text_end
 
 _CeladonMansion1Text5::
-	text "CELADON MANSION"
+	text "CELADON CONDOS "
 	line "Manager's Suite"
 	done

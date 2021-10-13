@@ -33,7 +33,7 @@ _ChooseABoxText::
 	text_end
 
 _EvolvedText::
-	text_ram wStringBuffer
+	text_ram wcf4b
 	text " evolved"
 	done
 
@@ -46,14 +46,14 @@ _IntoText::
 
 _StoppedEvolvingText::
 	text "Huh? @"
-	text_ram wStringBuffer
+	text_ram wcf4b
 	text_start
 	line "stopped evolving!"
 	prompt
 
 _IsEvolvingText::
 	text "What? @"
-	text_ram wStringBuffer
+	text_ram wcf4b
 	text_start
 	line "is evolving!"
 	done
@@ -96,7 +96,7 @@ _FireDefrostedText::
 _MonsStatsRoseText::
 	text "<USER>'s"
 	line "@"
-	text_ram wStringBuffer
+	text_ram wcf4b
 	text "@"
 	text_end
 
@@ -111,7 +111,7 @@ _RoseText::
 _MonsStatsFellText::
 	text "<TARGET>'s"
 	line "@"
-	text_ram wStringBuffer
+	text_ram wcf4b
 	text "@"
 	text_end
 

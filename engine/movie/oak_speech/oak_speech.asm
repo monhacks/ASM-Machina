@@ -64,7 +64,8 @@ OakSpeech:
 	call PrintText
 	call GBFadeOutToWhite
 	call ClearScreen
-	ld a, NIDORINO
+	;ld a, NIDORINO
+	ld a, NIDORINA
 	ld [wd0b5], a
 	ld [wcf91], a
 	call GetMonHeader

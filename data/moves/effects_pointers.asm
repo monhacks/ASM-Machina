@@ -75,10 +75,12 @@ MoveEffectPointerTable:
 	dw StatModifierDownEffect    ; unused effect
 	dw StatModifierDownEffect    ; unused effect
 	dw StatModifierDownEffect    ; unused effect
-	dw StatModifierDownEffect    ; unused effect
+	;dw StatModifierDownEffect    ; unused effect
+	dw AmnesiaEffect			 ; AMNESIA_EFFECT -OEA
 	dw ConfusionSideEffect       ; CONFUSION_SIDE_EFFECT
 	dw TwoToFiveAttacksEffect    ; TWINEEDLE_EFFECT
-	dw NULL                      ; unused effect
+	;dw NULL                     ; unused effect
+	dw TriAttackEffect		     ; TRI_ATTACK_EFFECT -OEA
 	dw SubstituteEffect          ; SUBSTITUTE_EFFECT
 	dw HyperBeamEffect           ; HYPER_BEAM_EFFECT
 	dw RageEffect                ; RAGE_EFFECT
